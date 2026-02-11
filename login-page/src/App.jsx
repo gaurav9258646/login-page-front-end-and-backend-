@@ -1,19 +1,17 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { Route, Routes } from "react-router-dom"
+import Login from "./pages/Login"
+import Signup from "./pages/Signup"
 import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
 
+function App() {
   return (
     <>
-      <div className="flex items-center justify-center h-screen bg-gray-100 ">
-      <h1 className="text-3xl font-bold text-blue-600">
-        Hello Tailwind 🚀
-      </h1>
-    </div>
-      
+  <Routes>
+  
+   <Route path="/signup" element={<Signup/>} />
+      <Route path="/login" element={<Login />} />
+  </Routes>      
     </>
   )
 }
