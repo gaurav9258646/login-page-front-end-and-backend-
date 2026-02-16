@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 
 function Signup() {
   const navigate = useNavigate();
@@ -11,7 +10,6 @@ function Signup() {
     password: ""
   });
 
-  const [submitData, setSubmitData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -22,21 +20,14 @@ function Signup() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitData(form);
-  };
+    setLoading(true);
+    setError("");
 
-  useEffect(() => {
-    if (!submitData) return;
+    try {
+      const url = import.meta.env.VITE_SERVER_URL;
 
-    const signupUser = async () => {
-      setLoading(true);
-      setError("");
-
-      try {
-     setLoading(true);
-     const url = import.meta.env.VITE_SERVER_URL;
       const res = await fetch(`${url}/users/register`, {
         method: "POST",
         headers: {
@@ -44,25 +35,22 @@ function Signup() {
         },
         body: JSON.stringify(form),
       });
-        const data = await res.json();
 
-        if (!res.ok) {
-          setError(data.message || "Signup failed");
-          setLoading(false);
-          return;
-        }
+      const data = await res.json();
 
-        navigate("/login");
-
-      } catch (err) {
-        setError("Server error");
+      if (!res.ok) {
+        setError(data.message || "Signup failed");
+        return;
       }
 
-      setLoading(false);
-    };
+      navigate("/login");
 
-    signupUser();
-  }, [submitData, navigate]);
+    } catch (err) {
+      setError("Server error");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -113,7 +101,7 @@ function Signup() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg transition duration-200"
+            className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg transition duration-200 disabled:opacity-50"
           >
             {loading ? "Creating Account..." : "Sign Up"}
           </button>
@@ -136,3 +124,4 @@ function Signup() {
 }
 
 export default Signup;
+ 
