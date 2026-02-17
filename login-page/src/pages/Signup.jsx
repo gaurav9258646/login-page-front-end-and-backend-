@@ -14,10 +14,19 @@ function Signup() {
   const [error, setError] = useState("");
 
   const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value
-    });
+  const { name, value } = e.target;
+
+  if (name === "name") {
+    
+    if (!/^[A-Za-z\s]*$/.test(value)) {
+      return;
+    }
+  }
+
+  setForm({
+    ...form,
+    [name]: value
+  });
   };
 
   const handleSubmit = async (e) => {
